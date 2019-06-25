@@ -7,7 +7,10 @@ import resolve from 'rollup-plugin-node-resolve';
 const input = './index.js';
 
 const external = [
-  'mysql'
+  'marked',
+  'messagebird',
+  'mysql',
+  'nodemailer',
 ];
 
 const plugins = [
