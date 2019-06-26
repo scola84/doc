@@ -1,11 +1,14 @@
 import sqlstring from 'sqlstring';
 import toPath from 'lodash-es/toPath';
 
+let id = 0;
+
 export class Snippet {
   constructor(options = {}) {
     this._allow = null;
     this._builder = null;
     this._escape = null;
+    this._id = null;
     this._infix = null;
     this._list = null;
     this._name = null;
@@ -16,12 +19,39 @@ export class Snippet {
     this.setAllow(options.allow);
     this.setBuilder(options.builder);
     this.setEscape(options.escape);
+    this.setId(options.id);
     this.setInfix(options.infix);
     this.setList(options.list);
     this.setName(options.name);
     this.setParens(options.parens);
     this.setPostfix(options.postfix);
     this.setPrefix(options.prefix);
+  }
+
+  clone() {
+    const options = this.getOptions();
+
+    options.list = options.list.map((snippet) => {
+      return snippet instanceof Snippet ?
+        snippet.clone() : snippet;
+    });
+
+    return new this.constructor(options);
+  }
+
+  getOptions() {
+    return {
+      allow: this._allow,
+      builder: this._builder,
+      escape: this._escape,
+      id: this._id,
+      infix: this._infix,
+      list: this._list,
+      name: this._name,
+      parens: this._parens,
+      postfix: this._postfix,
+      prefix: this._prefix
+    };
   }
 
   getAllow() {
@@ -48,6 +78,15 @@ export class Snippet {
 
   setEscape(value = Snippet.ESCAPE_NONE) {
     this._escape = value;
+    return this;
+  }
+
+  getId() {
+    return this._id;
+  }
+
+  setId(value = ++id) {
+    this._id = value;
     return this;
   }
 
