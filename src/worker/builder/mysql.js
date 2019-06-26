@@ -148,27 +148,17 @@ export class MysqlBuilder extends Worker {
         return;
       }
 
-      connection.query(query, (qerror, result) => {
-        try {
-          if (close) {
-            connection.release();
-          }
-
-          if (qerror) {
-            this.handleError(box, data, callback, qerror);
-            return;
-          }
-
-          data = this.merge(box, data, {
-            key: this._key,
-            query,
-            result
-          });
-
-          this.pass(box, data, callback);
-        } catch (terror) {
-          this.handleError(box, data, callback, terror);
+      connection.query(query, (error, result) => {
+        if (close) {
+          connection.release();
         }
+
+        if (error) {
+          this.handleError(box, data, callback, error);
+          return;
+        }
+
+        this.handleQuery(box, data, callback, query, result);
       });
     });
   }
@@ -243,6 +233,20 @@ export class MysqlBuilder extends Worker {
     error.reason = reason.toLowerCase();
 
     return error;
+  }
+
+  handleQuery(box, data, callback, query, result) {
+    try {
+      data = this.merge(box, data, {
+        key: this._key,
+        query,
+        result
+      });
+
+      this.pass(box, data, callback);
+    } catch (error) {
+      this.handleError(box, data, callback, error);
+    }
   }
 
   merge(box, data, { key, query, result }) {

@@ -58,8 +58,12 @@ export class MessageSender extends Worker {
   }
 
   handleSend(box, data, callback, result) {
-    data = this.merge(box, data, { result });
-    this.pass(box, data, callback);
+    try {
+      data = this.merge(box, data, { result });
+      this.pass(box, data, callback);
+    } catch (error) {
+      this.handleError(box, data, callback, error);
+    }
   }
 
   sprintf(data) {
