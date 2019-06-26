@@ -276,4 +276,8 @@ export class MysqlBuilder extends Worker {
 
     pool.getConnection(callback);
   }
+
+  selector(...args) {
+    return this._query.selector(...args);
+  }
 }

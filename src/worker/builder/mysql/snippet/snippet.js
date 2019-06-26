@@ -169,31 +169,24 @@ export class Snippet {
     return left + (hasDouble ? right.slice(1) : right);
   }
 
-  find(path, index) {
-    path = toPath(path);
+  find(compare) {
+    const result = [];
 
-    let result = [];
-    let snippet = null;
-
-    if (
-      path[0] === this._name ||
-      path[0] === index ||
-      path[0] === '*'
-    ) {
-      if (path.length === 1) {
-        result[result.length] = this;
-      } else {
-        result = result.concat(this.find(path.slice(1)));
-      }
-
-      return result;
+    if (compare(this) === true) {
+      result[result.length] = this;
     }
 
-    for (let i = 0; i < this._list.length; i += 1) {
-      snippet = this._list[i];
+    return this.findRecursive(result, this._list, compare);
+  }
+
+  findRecursive(result, list, compare) {
+    let snippet = null;
+
+    for (let i = 0; i < list.length; i += 1) {
+      snippet = list[i];
 
       if (snippet instanceof Snippet) {
-        result = result.concat(snippet.find(path, String(i)));
+        result = result.concat(snippet.find(compare));
       }
     }
 
@@ -281,8 +274,44 @@ export class Snippet {
     return value;
   }
 
+  selector(path, index) {
+    path = toPath(path);
+
+    let result = [];
+
+    if (
+      path[0] === this._name ||
+      path[0] === index ||
+      path[0] === '*'
+    ) {
+      if (path.length === 1) {
+        result[result.length] = this;
+      } else {
+        result = result.concat(this.selector(path.slice(1)));
+      }
+
+      return result;
+    }
+
+    return this.selectorRecursive(result, this._list, path);
+  }
+
+  selectorRecursive(result, list, path) {
+    let snippet = null;
+
+    for (let i = 0; i < list.length; i += 1) {
+      snippet = list[i];
+
+      if (snippet instanceof Snippet) {
+        result = result.concat(snippet.selector(path, String(i)));
+      }
+    }
+
+    return result;
+  }
+
   set(path, index, value) {
-    const list = this.find(path);
+    const list = this.selector(path);
 
     for (let i = 0; i < list.length; i += 1) {
       list[i].setItem(index, value);

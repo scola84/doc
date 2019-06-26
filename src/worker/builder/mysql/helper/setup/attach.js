@@ -69,5 +69,4 @@ export function attach() {
       prefix: item.token
     });
   });
-
 }
