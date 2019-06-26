@@ -3,6 +3,7 @@ import toPath from 'lodash-es/toPath';
 
 export class Snippet {
   constructor(options = {}) {
+    this._allow = null;
     this._builder = null;
     this._escape = null;
     this._infix = null;
@@ -12,6 +13,7 @@ export class Snippet {
     this._postfix = null;
     this._prefix = null;
 
+    this.setAllow(options.allow);
     this.setBuilder(options.builder);
     this.setEscape(options.escape);
     this.setInfix(options.infix);
@@ -20,6 +22,15 @@ export class Snippet {
     this.setParens(options.parens);
     this.setPostfix(options.postfix);
     this.setPrefix(options.prefix);
+  }
+
+  getAllow() {
+    return this._allow;
+  }
+
+  setAllow(value = null) {
+    this._allow = value;
+    return this;
   }
 
   getBuilder() {
@@ -84,7 +95,6 @@ export class Snippet {
     this._parens = value;
     return this;
   }
-
   getPostfix() {
     return this._postfix;
   }
@@ -103,14 +113,16 @@ export class Snippet {
     return this;
   }
 
+  allow(value) {
+    return this.setAllow(value);
+  }
+
   escape(value = Snippet.ESCAPE_VALUE) {
-    this._escape = value;
-    return this;
+    return this.setEscape(value);
   }
 
   parens() {
-    this._parens = true;
-    return this;
+    return this.setParens(true);
   }
 
   concat(left, right) {
@@ -118,21 +130,11 @@ export class Snippet {
     return left + (hasDouble ? right.slice(1) : right);
   }
 
-  set(path, index, value) {
-    const items = this.find(path);
-
-    for (let i = 0; i < items.length; i += 1) {
-      items[i].setItem(index, value);
-    }
-
-    return items;
-  }
-
   find(path, index) {
     path = toPath(path);
 
-    let items = [];
-    let item = null;
+    let result = [];
+    let snippet = null;
 
     if (
       path[0] === this._name ||
@@ -140,26 +142,36 @@ export class Snippet {
       path[0] === '*'
     ) {
       if (path.length === 1) {
-        items[items.length] = this;
+        result[result.length] = this;
       } else {
-        items = items.concat(this.find(path.slice(1)));
+        result = result.concat(this.find(path.slice(1)));
       }
 
-      return items;
+      return result;
     }
 
     for (let i = 0; i < this._list.length; i += 1) {
-      item = this._list[i];
+      snippet = this._list[i];
 
-      if (item instanceof Snippet) {
-        items = items.concat(item.find(path, String(i)));
+      if (snippet instanceof Snippet) {
+        result = result.concat(snippet.find(path, String(i)));
       }
     }
 
-    return items;
+    return result;
+  }
+
+  isAllowed(box, data) {
+    return this.resolveValue(box, data, this._allow);
   }
 
   resolve(box, data) {
+    const isAllowed = this.isAllowed(box, data);
+
+    if (isAllowed === false) {
+      return null;
+    }
+
     let string = '';
 
     string = this.concat(string, this._prefix);
@@ -223,6 +235,20 @@ export class Snippet {
       return this.resolveValue(box, data, value.resolve(box, data));
     }
 
-    return this.resolveEscape(value, this._escape);
+    if (typeof value === 'string') {
+      return this.resolveEscape(value, this._escape);
+    }
+
+    return value;
+  }
+
+  set(path, index, value) {
+    const list = this.find(path);
+
+    for (let i = 0; i < list.length; i += 1) {
+      list[i].setItem(index, value);
+    }
+
+    return list;
   }
 }
