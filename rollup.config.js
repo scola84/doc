@@ -11,7 +11,7 @@ const external = [
   'marked',
   'messagebird',
   'mysql',
-  'nodemailer',
+  'nodemailer'
 ];
 
 const plugins = [

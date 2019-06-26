@@ -138,9 +138,7 @@ export class MysqlBuilder extends Worker {
       timeout: this._timeout
     };
 
-    if (this._log === 'query') {
-      console.log(query.sql);
-    }
+    this.log('info', box, data, query);
 
     this.open(box, data, (oerror, connection, close = true) => {
       if (oerror) {
