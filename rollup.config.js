@@ -7,6 +7,7 @@ import resolve from 'rollup-plugin-node-resolve';
 const input = './index.js';
 
 const external = [
+  'fs-extra',
   'marked',
   'messagebird',
   'mysql',
