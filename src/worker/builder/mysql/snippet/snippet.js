@@ -263,12 +263,12 @@ export class Snippet {
       return this.resolveValue(box, data, value(box, data));
     }
 
-    if (typeof value.resolve === 'function') {
-      return this.resolveValue(box, data, value.resolve(box, data));
-    }
-
     if (typeof value === 'string') {
       return this.resolveEscape(value, this._escape);
+    }
+
+    if (value instanceof Snippet) {
+      return this.resolveValue(box, data, value.resolve(box, data));
     }
 
     return value;
