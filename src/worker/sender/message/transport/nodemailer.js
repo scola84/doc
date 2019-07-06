@@ -1,47 +1,20 @@
-import defaults from 'lodash-es/defaultsDeep';
 import nodemailer from 'nodemailer';
+import { Transport } from './transport';
 
-export class Nodemailer {
-  constructor(options = {}) {
-    this._options = null;
-    this._transport = null;
-
-    this.setOptions(options.options);
-    this.setTransport(options.transport);
-  }
-
-  getOptions() {
-    return this._options;
-  }
-
-  setOptions(value = null) {
-    this._options = defaults({}, value, {
-      pool: true
-    });
-
-    return this;
-  }
-
-  getTransport() {
-    return this._transport;
-  }
-
-  setTransport(value = null) {
-    this._transport = value;
-    return this;
-  }
-
-  createTransport() {
-    this.setTransport(
-      nodemailer.createTransport(this._options)
+export class Nodemailer extends Transport {
+  createClient() {
+    this.setClient(
+      nodemailer.createTransport(
+        this._builder.mapHost(this._host)
+      )
     );
   }
 
   send(message, callback) {
-    if (this._transport === null) {
-      this.createTransport();
+    if (this._client === null) {
+      this.createClient();
     }
 
-    this._transport.sendMail(message, callback);
+    this._client.sendMail(message, callback);
   }
 }

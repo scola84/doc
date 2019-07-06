@@ -1,4 +1,4 @@
-export const prefix = [
+export default [
   'DELETE',
   'INSERT',
   'REPLACE',

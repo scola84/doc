@@ -68,7 +68,9 @@ const list = [
   'UNION'
 ];
 
-export const infix = list.map((token) => {
-  const name = alias[token];
-  return name ? { name, token } : token;
+export default list.map((token) => {
+  return {
+    name: alias[token] || token,
+    token
+  };
 });

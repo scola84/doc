@@ -1,29 +1,13 @@
 import { Worker } from '@scola/worker';
-import camel from 'lodash-es/camelCase';
-import merge from 'lodash-es/merge';
 import mysql from 'mysql';
-import * as setup from './mysql/helper/setup';
+import * as token from './mysql/token';
 
-const hosts = {};
+let hosts = {};
 const pools = {};
 
 export class MysqlBuilder extends Worker {
-  static attachFactory(prefix, name, object, options = {}) {
-    MysqlBuilder.prototype[
-      camel(MysqlBuilder.prototype[name] ?
-        `${prefix}-${name}` : name)
-    ] = function create(...list) {
-      return new object(Object.assign(options, {
-        builder: this,
-        list,
-        name
-      }));
-    };
-  }
-
-  static setup(...names) {
-    names = names.length === 0 ? Object.keys(setup) : names;
-    names.forEach((name) => setup[name]());
+  static setup() {
+    MysqlBuilder.attach(MysqlBuilder, token);
   }
 
   static getHosts() {
@@ -31,7 +15,7 @@ export class MysqlBuilder extends Worker {
   }
 
   static setHosts(value) {
-    merge(hosts, value);
+    hosts = value;
   }
 
   constructor(options = {}) {
@@ -79,7 +63,7 @@ export class MysqlBuilder extends Worker {
     return this._host;
   }
 
-  setHost(value = null) {
+  setHost(value = 'default') {
     this._host = value;
     return this;
   }
@@ -165,52 +149,14 @@ export class MysqlBuilder extends Worker {
     return this.setQuery(query);
   }
 
-  createPool(box, data) {
-    const hostname = this.formatHostname(box, data);
-    const shard = this.formatShard(box, data);
-
-    const index = shard === null ?
-      0 :
-      Math.floor(shard / hosts[hostname].shards);
-
-    const pool = hostname + index;
-
-    if (typeof pools[pool] === 'undefined') {
-      const options = this.resolve(
-        box,
-        data,
-        hosts[hostname] && hosts[hostname].options || {},
-        index
+  createPool() {
+    if (typeof pools[this._host] === 'undefined') {
+      pools[this._host] = mysql.createPool(
+        this.mapHost(this._host)
       );
-
-      pools[pool] = mysql.createPool(options);
     }
 
-    return pools[pool];
-  }
-
-  formatDatabase(box, data, hostname) {
-    return this.resolve(
-      box,
-      data,
-      hosts[hostname] && hosts[hostname].database || null
-    );
-  }
-
-  formatHostname(box, data) {
-    return this.resolve(
-      box,
-      data,
-      this._host && this._host.name || 'default' || null
-    );
-  }
-
-  formatShard(box, data) {
-    return this.resolve(
-      box,
-      data,
-      this._host && this._host.shard || null
-    );
+    return pools[this._host];
   }
 
   handleError(box, data, callback, error) {
@@ -245,6 +191,10 @@ export class MysqlBuilder extends Worker {
     } catch (error) {
       this.handleError(box, data, callback, error);
     }
+  }
+
+  mapHost(name) {
+    return hosts[name];
   }
 
   merge(box, data, { key, query, result }) {

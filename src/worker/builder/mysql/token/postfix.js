@@ -1,4 +1,4 @@
-export const postfix = [
+export default [
   'ASC',
   'DESC',
 

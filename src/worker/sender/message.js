@@ -1,21 +1,21 @@
 import { Worker } from '@scola/worker';
-import camel from 'lodash-es/camelCase';
 import marked from 'marked';
 import sprintf from 'sprintf-js';
-import * as setup from './message/helper/setup';
+import { token } from './message/';
+
+let hosts = {};
 
 export class MessageSender extends Worker {
-  static attachFactory(name, object) {
-    MessageSender.prototype[
-      camel(name)
-    ] = function create(options) {
-      return new object(options);
-    };
+  static setup() {
+    MessageSender.attach(MessageSender, { token });
   }
 
-  static setup(...names) {
-    names = names.length === 0 ? Object.keys(setup) : names;
-    names.forEach((name) => setup[name]());
+  static getHosts() {
+    return hosts;
+  }
+
+  static setHosts(value) {
+    hosts = value;
   }
 
   constructor(options = {}) {
@@ -36,6 +36,10 @@ export class MessageSender extends Worker {
 
   transport(value) {
     return this.setTransport(value);
+  }
+
+  mapHost(name) {
+    return hosts[name];
   }
 
   act(box, data, callback) {

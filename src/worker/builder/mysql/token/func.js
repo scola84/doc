@@ -13,7 +13,7 @@ WHERE
 ORDER BY name;
 */
 
-export const func = [
+export default [
   'ABS',
   'ACOS',
   'ADDDATE',

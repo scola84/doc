@@ -76,7 +76,7 @@ export class Snippet {
     return this._escape;
   }
 
-  setEscape(value = Snippet.ESCAPE_NONE) {
+  setEscape(value = '') {
     this._escape = value;
     return this;
   }
@@ -156,8 +156,12 @@ export class Snippet {
     return this.setAllow(value);
   }
 
-  escape(value = Snippet.ESCAPE_VALUE) {
-    return this.setEscape(value);
+  escape() {
+    return this.setEscape('value');
+  }
+
+  escapeId() {
+    return this.setEscape('id');
   }
 
   parens() {
@@ -214,11 +218,11 @@ export class Snippet {
   }
 
   resolveEscape(value, type) {
-    if (type === Snippet.ESCAPE_VALUE) {
+    if (type === 'value') {
       return sqlstring.escape(value);
     }
 
-    if (type === Snippet.ESCAPE_ID) {
+    if (type === 'id') {
       return sqlstring.escapeId(value);
     }
 
