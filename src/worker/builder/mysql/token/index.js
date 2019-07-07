@@ -1,4 +1,6 @@
+import camel from 'lodash-es/camelCase';
 import { Snippet } from '../snippet/snippet';
+
 import funcBase from './func';
 import infixBase from './infix';
 import postfixBase from './postfix';
@@ -33,7 +35,7 @@ const custom = {
 
 const func = funcBase.reduce((object, name) => {
   return Object.assign(object, {
-    [name]: {
+    [camel(name)]: {
       object: Snippet,
       options: {
         name,
@@ -46,7 +48,7 @@ const func = funcBase.reduce((object, name) => {
 
 const infix = infixBase.reduce((object, { name, token }) => {
   return Object.assign(object, {
-    [name]: {
+    [camel(name)]: {
       object: Snippet,
       options: {
         infix: ` ${token} `,
@@ -58,7 +60,7 @@ const infix = infixBase.reduce((object, { name, token }) => {
 
 const postfix = postfixBase.reduce((object, name) => {
   return Object.assign(object, {
-    [name]: {
+    [camel(name)]: {
       object: Snippet,
       options: {
         name,
@@ -70,7 +72,7 @@ const postfix = postfixBase.reduce((object, name) => {
 
 const prefix = prefixBase.reduce((object, name) => {
   return Object.assign(object, {
-    [name]: {
+    [camel(name)]: {
       object: Snippet,
       options: {
         name,
@@ -83,7 +85,7 @@ const prefix = prefixBase.reduce((object, name) => {
 const snippet = Object.keys(snippetBase).reduce((master, group) => {
   return Object.keys(snippetBase[group]).reduce((object, name) => {
     return Object.assign(object, {
-      [name]: {
+      [camel(name)]: {
         object: snippetBase[group][name]
       }
     });

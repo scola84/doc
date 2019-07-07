@@ -1,9 +1,11 @@
+import camel from 'lodash-es/camelCase';
+
 export * from './transport';
 import * as transport from './transport';
 
 const token = Object.keys(transport).reduce((object, name) => {
   return Object.assign(object, {
-    [name]: {
+    [camel(name)]: {
       object: transport[name]
     }
   });
