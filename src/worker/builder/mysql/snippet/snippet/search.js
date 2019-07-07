@@ -19,7 +19,7 @@ export class Search extends Snippet {
       string += ' LIKE ';
       string += this.resolveEscape(
         trim(match[i].replace(wildcard, '%')),
-        Snippet.ESCAPE_VALUE
+        'value'
       );
     }
 
