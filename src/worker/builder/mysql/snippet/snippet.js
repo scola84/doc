@@ -6,22 +6,22 @@ let id = 0;
 export class Snippet {
   constructor(options = {}) {
     this._allow = null;
+    this._args = null;
     this._builder = null;
     this._escape = null;
     this._id = null;
     this._infix = null;
-    this._list = null;
     this._name = null;
     this._parens = null;
     this._postfix = null;
     this._prefix = null;
 
     this.setAllow(options.allow);
+    this.setArgs(options.args);
     this.setBuilder(options.builder);
     this.setEscape(options.escape);
     this.setId(options.id);
     this.setInfix(options.infix);
-    this.setList(options.list);
     this.setName(options.name);
     this.setParens(options.parens);
     this.setPostfix(options.postfix);
@@ -31,7 +31,7 @@ export class Snippet {
   clone() {
     const options = this.getOptions();
 
-    options.list = options.list.map((snippet) => {
+    options.args = options.args.map((snippet) => {
       return snippet instanceof Snippet ?
         snippet.clone() : snippet;
     });
@@ -42,11 +42,11 @@ export class Snippet {
   getOptions() {
     return {
       allow: this._allow,
+      args: this._args,
       builder: this._builder,
       escape: this._escape,
       id: this._id,
       infix: this._infix,
-      list: this._list,
       name: this._name,
       parens: this._parens,
       postfix: this._postfix,
@@ -60,6 +60,24 @@ export class Snippet {
 
   setAllow(value = null) {
     this._allow = value;
+    return this;
+  }
+
+  getArg(index) {
+    return this._args[index];
+  }
+
+  setArg(index, value) {
+    this.args[index] = value;
+    return this;
+  }
+
+  getArgs() {
+    return this._args;
+  }
+
+  setArgs(value = []) {
+    this._args = value;
     return this;
   }
 
@@ -96,24 +114,6 @@ export class Snippet {
 
   setInfix(value = ', ') {
     this._infix = value;
-    return this;
-  }
-
-  getItem(index) {
-    return this._list[index];
-  }
-
-  setItem(index, value) {
-    this._list[index] = value;
-    return this;
-  }
-
-  getList() {
-    return this._list;
-  }
-
-  setList(value = []) {
-    this._list = value;
     return this;
   }
 
@@ -180,14 +180,14 @@ export class Snippet {
       result[result.length] = this;
     }
 
-    return this.findRecursive(result, this._list, compare);
+    return this.findRecursive(result, this._args, compare);
   }
 
-  findRecursive(result, list, compare) {
+  findRecursive(result, args, compare) {
     let snippet = null;
 
-    for (let i = 0; i < list.length; i += 1) {
-      snippet = list[i];
+    for (let i = 0; i < args.length; i += 1) {
+      snippet = args[i];
 
       if (snippet instanceof Snippet) {
         result = result.concat(snippet.find(compare));
@@ -235,8 +235,8 @@ export class Snippet {
     let count = 0;
     let value = null;
 
-    for (let i = 0; i < this._list.length; i += 1) {
-      value = this.resolveValue(box, data, this._list[i]);
+    for (let i = 0; i < this._args.length; i += 1) {
+      value = this.resolveValue(box, data, this._args[i]);
 
       if (value === null) {
         continue;
@@ -297,7 +297,7 @@ export class Snippet {
       return result;
     }
 
-    return this.selectorRecursive(result, this._list, path);
+    return this.selectorRecursive(result, this._args, path);
   }
 
   selectorRecursive(result, list, path) {

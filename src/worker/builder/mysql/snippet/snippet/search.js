@@ -8,7 +8,7 @@ export class Search extends Snippet {
       value,
       operator = 'OR',
       wildcard = /\*/g
-    ] = this._list;
+    ] = this._args;
 
     const match = value.match(/[^"\s]+|"[^"]+"/g);
     let string = '';
