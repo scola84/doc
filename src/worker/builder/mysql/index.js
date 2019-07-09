@@ -1,2 +1,2 @@
 export * from './snippet';
-export * from './token';
+export * from './map';

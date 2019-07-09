@@ -1,13 +1,13 @@
-import { Worker } from '@scola/worker';
+import { Builder } from '@scola/worker';
 import marked from 'marked';
 import sprintf from 'sprintf-js';
-import { token } from './message/';
+import { map } from './message/';
 
 let hosts = {};
 
-export class MessageSender extends Worker {
+export class MessageSender extends Builder {
   static setup() {
-    MessageSender.attach(MessageSender, { token });
+    MessageSender.attachFactories(MessageSender, { map });
   }
 
   static getHosts() {

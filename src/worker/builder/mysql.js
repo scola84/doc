@@ -1,13 +1,13 @@
-import { Worker } from '@scola/worker';
+import { Builder } from '@scola/worker';
 import mysql from 'mysql';
-import * as token from './mysql/token';
+import * as map from './mysql/map';
 
 let hosts = {};
 const pools = {};
 
-export class MysqlBuilder extends Worker {
+export class MysqlBuilder extends Builder {
   static setup() {
-    MysqlBuilder.attach(MysqlBuilder, token);
+    MysqlBuilder.attachFactories(MysqlBuilder, map);
   }
 
   static getHosts() {
