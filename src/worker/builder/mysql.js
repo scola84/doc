@@ -26,6 +26,7 @@ export class MysqlBuilder extends Builder {
     this._key = null;
     this._nest = null;
     this._query = null;
+    this._stream = null;
     this._timeout = null;
     this._type = null;
 
@@ -34,6 +35,7 @@ export class MysqlBuilder extends Builder {
     this.setKey(options.key);
     this.setNest(options.nest);
     this.setQuery(options.query);
+    this.setStream(options.stream);
     this.setTimeout(options.timeout);
     this.setType(options.type);
   }
@@ -45,6 +47,7 @@ export class MysqlBuilder extends Builder {
       key: this._key,
       nest: this._nest,
       query: this._query,
+      stream: this._stream,
       timeout: this._timeout,
       type: this._type
     });
@@ -95,6 +98,15 @@ export class MysqlBuilder extends Builder {
     return this;
   }
 
+  getStream() {
+    return this._stream;
+  }
+
+  setStream(value = null) {
+    this._stream = value;
+    return this;
+  }
+
   getTimeout() {
     return this._timeout;
   }
@@ -127,6 +139,11 @@ export class MysqlBuilder extends Builder {
     this.open(box, data, (oerror, connection, close = true) => {
       if (oerror) {
         this.handleError(box, data, callback, oerror);
+        return;
+      }
+
+      if (this._stream) {
+        this.handleStream(box, data, callback, connection, query);
         return;
       }
 
@@ -191,6 +208,31 @@ export class MysqlBuilder extends Builder {
     } catch (error) {
       this.handleError(box, data, callback, error);
     }
+  }
+
+  handleStream(box, data, callback, connection, query) {
+    const stream = connection.query(query);
+
+    stream.on('error', (error) => {
+      stream.removeAllListeners();
+      this.handleError(box, data, callback, error);
+    });
+
+    stream.on('result', (row) => {
+      this.pass(box, row, (bx, resume) => {
+        if (resume === false) {
+          connection.pause();
+          return;
+        }
+
+        connection.resume();
+      });
+    });
+
+    stream.on('end', () => {
+      stream.removeAllListeners();
+      this.pass(box, null, callback);
+    });
   }
 
   mapHost(name) {
