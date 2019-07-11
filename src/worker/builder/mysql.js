@@ -136,29 +136,17 @@ export class MysqlBuilder extends Builder {
 
     this.log('info', box, data, query);
 
-    this.open(box, data, (oerror, connection, close = true) => {
-      if (oerror) {
-        this.handleError(box, data, callback, oerror);
+    this.open(box, data, (error, connection, release = true) => {
+      if (error) {
+        this.handleError(box, data, callback, error);
         return;
       }
 
-      if (this._stream) {
-        this.handleStream(box, data, callback, connection, query);
-        return;
+      if (this._stream === true) {
+        this.streamData(box, data, callback, connection, query, release);
+      } else {
+        this.queryData(box, data, callback, connection, query, release);
       }
-
-      connection.query(query, (error, result) => {
-        if (close) {
-          connection.release();
-        }
-
-        if (error) {
-          this.handleError(box, data, callback, error);
-          return;
-        }
-
-        this.handleQuery(box, data, callback, query, result);
-      });
     });
   }
 
@@ -210,31 +198,6 @@ export class MysqlBuilder extends Builder {
     }
   }
 
-  handleStream(box, data, callback, connection, query) {
-    const stream = connection.query(query);
-
-    stream.on('error', (error) => {
-      stream.removeAllListeners();
-      this.handleError(box, data, callback, error);
-    });
-
-    stream.on('result', (row) => {
-      this.pass(box, row, (bx, resume) => {
-        if (resume === false) {
-          connection.pause();
-          return;
-        }
-
-        connection.resume();
-      });
-    });
-
-    stream.on('end', () => {
-      stream.removeAllListeners();
-      this.pass(box, null, callback);
-    });
-  }
-
   mapHost(name) {
     return hosts[name];
   }
@@ -271,7 +234,49 @@ export class MysqlBuilder extends Builder {
     pool.getConnection(callback);
   }
 
+  queryData(box, data, callback, connection, query, release) {
+    connection.query(query, (error, result) => {
+      if (release) {
+        connection.release();
+      }
+
+      if (error) {
+        this.handleError(box, data, callback, error);
+        return;
+      }
+
+      this.handleQuery(box, data, callback, query, result);
+    });
+  }
+
   selector(...args) {
     return this._query.selector(...args);
+  }
+
+  streamData(box, data, callback, connection, query, release) {
+    const stream = connection.query(query);
+
+    stream.on('error', (error) => {
+      stream.removeAllListeners();
+      this.handleError(box, data, callback, error);
+    });
+
+    stream.on('result', (row) => {
+      this.pass(box, row, (bx, resume) => {
+        if (resume === false) {
+          connection.pause();
+        } else {
+          connection.resume();
+        }
+      });
+    });
+
+    stream.on('end', () => {
+      stream.removeAllListeners();
+
+      if (release) {
+        connection.release();
+      }
+    });
   }
 }
