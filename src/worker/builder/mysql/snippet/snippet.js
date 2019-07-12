@@ -134,6 +134,7 @@ export class Snippet {
     this._parens = value;
     return this;
   }
+
   getPostfix() {
     return this._postfix;
   }
