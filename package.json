@@ -8,17 +8,21 @@
   "main": "./dist/doc.cjs.js",
   "module": "./index.js",
   "devDependencies": {
-    "rollup": "^1.12.5",
-    "rollup-plugin-buble": "^0.19.6",
-    "rollup-plugin-commonjs": "^10.0.0",
+    "rollup": "^1.17.0",
+    "rollup-plugin-buble": "^0.19.8",
+    "rollup-plugin-commonjs": "^10.0.1",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-builtins": "^2.1.2",
-    "rollup-plugin-node-resolve": "^5.0.0"
+    "rollup-plugin-node-resolve": "^5.2.0"
   },
   "dependencies": {
-    "@scola/worker": "^2.15.0",
-    "lodash-es": "^4.17.11",
+    "fs-extra": "^8.1.0",
+    "lodash-es": "^4.17.14",
+    "marked": "^0.7.0",
+    "messagebird": "^2.4.1",
     "mysql": "^2.17.1",
+    "nodemailer": "^6.3.0",
+    "path": "^0.12.7",
     "sprintf-js": "^1.1.2",
     "sqlstring": "^2.3.1"
   }
