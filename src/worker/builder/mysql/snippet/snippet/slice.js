@@ -5,11 +5,11 @@ export class Slice extends Snippet {
     super(options);
 
     this._count = null;
-    this._default = null;
+    this._max = null;
     this._offset = null;
 
     this.setCount(options.count);
-    this.setDefault(options.default);
+    this.setMax(options.max);
     this.setOffset(options.offset);
   }
 
@@ -22,12 +22,12 @@ export class Slice extends Snippet {
     return this;
   }
 
-  getDefault() {
-    return this._default;
+  getMax() {
+    return this._max;
   }
 
-  setDefault(value = '10 OFFSET 0') {
-    this._default = value;
+  setMax(value = 100) {
+    this._max = value;
     return this;
   }
 
@@ -44,8 +44,8 @@ export class Slice extends Snippet {
     return this.setCount(value);
   }
 
-  default (value) {
-    return this.setDefault(value);
+  max(value) {
+    return this.setMax(value);
   }
 
   offset(value) {
@@ -53,20 +53,25 @@ export class Slice extends Snippet {
   }
 
   resolveInner(box, data) {
-    const count = this.resolveValue(box, data, this._count);
-    const offset = this.resolveValue(box, data, this._offset);
+    const count = parseFloat(
+      this.resolveValue(box, data, this._count)
+    );
 
-    let string = '';
+    const offset = parseFloat(
+      this.resolveValue(box, data, this._offset)
+    );
 
     if (
-      Number.isInteger(parseFloat(count)) === false ||
-      Number.isInteger(parseFloat(offset)) === false
+      Number.isInteger(count) === false ||
+      Number.isInteger(offset) === false ||
+      count > this._max
     ) {
-      string = this.resolveValue(box, data, this._default);
-    } else {
-      string = `${count} OFFSET ${offset}`;
+      throw new Error('400 Slice parameters are invalid');
     }
 
-    return this.resolveParens(string, this._parens);
+    return this.resolveParens(
+      `${count} OFFSET ${offset}`,
+      this._parens
+    );
   }
 }
