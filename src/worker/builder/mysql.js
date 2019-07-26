@@ -215,7 +215,7 @@ export class MysqlBuilder extends Builder {
       return { data: result[0] };
     }
 
-    return result;
+    return { data: {} };
   }
 
   open(box, data, callback) {
