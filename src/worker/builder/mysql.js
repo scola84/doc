@@ -208,11 +208,23 @@ export class MysqlBuilder extends Builder {
     }
 
     if (this._type === 'list') {
-      return { data: result };
+      return {
+        data: result
+      };
     }
 
     if (this._type === 'object') {
-      return { data: result[0] };
+      return {
+        data: result[0]
+      };
+    }
+
+    if (this._type === 'insert') {
+      return {
+        data: {
+          [this._key]: result.insertId
+        }
+      };
     }
 
     return { data: {} };
