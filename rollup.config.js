@@ -4,15 +4,25 @@ import commonjs from 'rollup-plugin-commonjs';
 import json from 'rollup-plugin-json';
 import resolve from 'rollup-plugin-node-resolve';
 
-const input = './index.js';
-
 const external = [
+  '@scola/worker',
   'fs-extra',
   'marked',
   'messagebird',
   'mysql',
   'nodemailer'
 ];
+
+const globals = {
+  '@scola/worker': 'scola.worker',
+  'fs-extra': 'fsExtra',
+  'marked': 'marked',
+  'messagebird': 'messagebird',
+  'mysql': 'mysql',
+  'nodemailer': 'mysql'
+};
+
+const input = './index.js';
 
 const plugins = [
   resolve(),
@@ -29,6 +39,7 @@ export default [{
     extend: true,
     file: 'dist/doc.umd.js',
     format: 'umd',
+    globals,
     name: 'scola.doc'
   },
   plugins
@@ -37,7 +48,8 @@ export default [{
   external,
   output: {
     file: 'dist/doc.cjs.js',
-    format: 'cjs'
+    format: 'cjs',
+    globals
   },
   plugins
 }];
