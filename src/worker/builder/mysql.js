@@ -154,14 +154,20 @@ export class MysqlBuilder extends Builder {
     return this.setQuery(query);
   }
 
-  createPool() {
-    if (typeof pools[this._host] === 'undefined') {
-      pools[this._host] = mysql.createPool(
-        this.mapHost(this._host)
+  createPool(box, data) {
+    let host = this._host;
+
+    if (typeof host === 'function') {
+      host = host(box, data);
+    }
+
+    if (typeof pools[host] === 'undefined') {
+      pools[host] = mysql.createPool(
+        this.mapHost(host)
       );
     }
 
-    return pools[this._host];
+    return pools[host];
   }
 
   handleError(box, data, callback, error) {
@@ -199,7 +205,7 @@ export class MysqlBuilder extends Builder {
   }
 
   mapHost(name) {
-    return hosts[name];
+    return hosts[name] || name;
   }
 
   merge(box, data, { key, query, result }) {
