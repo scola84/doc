@@ -206,7 +206,7 @@ export class Snippet {
     const isAllowed = this.isAllowed(box, data);
 
     if (isAllowed === false) {
-      return null;
+      return void 0;
     }
 
     let string = '';
@@ -260,10 +260,6 @@ export class Snippet {
   }
 
   resolveValue(box, data, value) {
-    if (value === null || typeof value === 'undefined') {
-      return value;
-    }
-
     if (typeof value === 'function') {
       return this.resolveValue(box, data, value(box, data));
     }
@@ -274,6 +270,10 @@ export class Snippet {
 
     if (value instanceof Snippet) {
       return this.resolveValue(box, data, value.resolve(box, data));
+    }
+
+    if (value === null) {
+      return 'NULL';
     }
 
     return value;
