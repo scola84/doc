@@ -1,4 +1,5 @@
 import { Builder } from '@scola/worker';
+import groupBy from 'lodash-es/groupBy';
 import mysql from 'mysql';
 import * as map from './mysql/map';
 
@@ -213,6 +214,24 @@ export class MysqlBuilder extends Builder {
       return this._merge(box, data, { key, query, result });
     }
 
+    if (this._type === 'insert') {
+      return {
+        data: {
+          [this._key]: result.insertId
+        }
+      };
+    }
+
+    if (this._type === 'link') {
+      return {
+        data: groupBy(result, (item) => {
+          const link = item.__link;
+          delete item.__link;
+          return link;
+        })
+      };
+    }
+
     if (this._type === 'list') {
       return {
         data: result
@@ -222,14 +241,6 @@ export class MysqlBuilder extends Builder {
     if (this._type === 'object') {
       return {
         data: result[0]
-      };
-    }
-
-    if (this._type === 'insert') {
-      return {
-        data: {
-          [this._key]: result.insertId
-        }
       };
     }
 
