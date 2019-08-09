@@ -1,4 +1,3 @@
-import sqlstring from 'sqlstring';
 import toPath from 'lodash-es/toPath';
 
 let id = 0;
@@ -219,15 +218,7 @@ export class Snippet {
   }
 
   resolveEscape(value, type) {
-    if (type === 'value') {
-      return sqlstring.escape(value);
-    }
-
-    if (type === 'id') {
-      return sqlstring.escapeId(value);
-    }
-
-    return value;
+    return this._builder.escape(value, type);
   }
 
   resolveInner(box, data) {

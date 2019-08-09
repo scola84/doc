@@ -103,7 +103,7 @@ export class Search extends Snippet {
 
     for (let i = 0; i < columns.length; i += 1) {
       string += i === 0 ? '(' : ` ${outer} (`;
-      string += match.length === 0 ? '1' : '';
+      string += match.length === 0 ? 'true' : '';
 
       for (let j = 0; j < match.length; j += 1) {
         string += j === 0 ? '' : ` ${inner} `;

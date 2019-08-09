@@ -1,6 +1,7 @@
 import camel from 'lodash-es/camelCase';
 import { Snippet } from '../snippet/snippet';
 
+import dialectBase from './dialect';
 import funcBase from './func';
 import infixBase from './infix';
 import postfixBase from './postfix';
@@ -16,12 +17,12 @@ const custom = {
       prefix: 'FROM '
     }
   },
-  string: {
+  id: {
     object: Snippet,
     options: {
-      escape: 'value',
+      escape: 'id',
       infix: ' ',
-      name: 'string'
+      name: 'id'
     }
   },
   query: {
@@ -30,8 +31,26 @@ const custom = {
       infix: ' ',
       name: 'query'
     }
+  },
+  value: {
+    object: Snippet,
+    options: {
+      escape: 'value',
+      infix: ' ',
+      name: 'value'
+    }
   }
 };
+
+const dialect = Object.keys(dialectBase).reduce((master, group) => {
+  return Object.keys(dialectBase[group]).reduce((object, name) => {
+    return Object.assign(object, {
+      [camel(name)]: {
+        object: dialectBase[group][name]
+      }
+    });
+  }, master);
+}, {});
 
 const func = funcBase.reduce((object, name) => {
   return Object.assign(object, {
@@ -94,6 +113,7 @@ const snippet = Object.keys(snippetBase).reduce((master, group) => {
 
 export {
   custom,
+  dialect,
   snippet,
   infix,
   postfix,

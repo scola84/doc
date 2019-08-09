@@ -10,7 +10,8 @@ const external = [
   'marked',
   'messagebird',
   'mysql',
-  'nodemailer'
+  'nodemailer',
+  'pg'
 ];
 
 const globals = {
@@ -19,7 +20,8 @@ const globals = {
   'marked': 'marked',
   'messagebird': 'messagebird',
   'mysql': 'mysql',
-  'nodemailer': 'mysql'
+  'nodemailer': 'nodemailer',
+  'pg': 'pg'
 };
 
 const input = './index.js';

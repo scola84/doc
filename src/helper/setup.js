@@ -4,12 +4,12 @@ import {
 
 import {
   MessageSender,
-  MysqlBuilder
+  SqlBuilder
 } from '../worker';
 
 export function setup() {
   Worker.setLog(Worker.log);
 
   MessageSender.setup();
-  MysqlBuilder.setup();
+  SqlBuilder.setup();
 }
