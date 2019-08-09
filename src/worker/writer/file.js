@@ -4,11 +4,12 @@ import { Worker } from '@scola/worker';
 
 export class FileWriter extends Worker {
   act(box, data, callback) {
-    data = this.filter(box, data);
+    const file = this.filter(box, data);
 
-    fs.ensureDirSync(path.dirname(data.write));
+    fs.ensureDirSync(path.dirname(file.write));
 
-    const reader = fs.createReadStream(data.read);
+    const reader = fs.createReadStream(file.read);
+    const writer = fs.createWriteStream(file.write);
 
     reader.once('error', (error) => {
       this.removeListeners(reader);
@@ -16,13 +17,11 @@ export class FileWriter extends Worker {
     });
 
     reader.once('open', () => {
-      this.handleOpen(box, data, callback, reader);
+      this.handleOpen(box, data, callback, reader, writer);
     });
   }
 
-  handleOpen(box, data, callback, reader) {
-    const writer = fs.createWriteStream(data.write);
-
+  handleOpen(box, data, callback, reader, writer) {
     writer.once('error', (error) => {
       this.removeListeners(reader, writer);
       this.fail(box, error, callback);

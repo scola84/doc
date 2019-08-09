@@ -147,13 +147,14 @@ export class SqlBuilder extends Builder {
   }
 
   act(box, data, callback) {
-    data = this.filter(box, data);
-
     if (this._dialect === null) {
       this.createDialect();
     }
 
-    const query = this._query.resolve(box, data);
+    const query = this._query.resolve(
+      box,
+      this.filter(box, data)
+    );
 
     if (this._stream) {
       this._dialect.stream(box, data, query, (error, result) => {
