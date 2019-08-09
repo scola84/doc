@@ -1,12 +1,10 @@
 export class Transport {
   constructor(options = {}) {
     this._builder = null;
-    this._client = null;
-    this._host = null;
+    this._options = null;
 
     this.setBuilder(options.builder);
-    this.setClient(options.client);
-    this.setHost(options.host);
+    this.setOptions(options.options);
   }
 
   getBuilder() {
@@ -18,26 +16,21 @@ export class Transport {
     return this;
   }
 
-  getClient() {
-    return this._client;
+  getOptions() {
+    return this._options;
   }
 
-  setClient(value = null) {
-    this._client = value;
+  setOptions(value = {}) {
+    this._options = value;
     return this;
   }
 
-  getHost() {
-    return this._host;
+  builder(value) {
+    return this.setBuilder(value);
   }
 
-  setHost(value = null) {
-    this._host = value;
-    return this;
-  }
-
-  host(value) {
-    return this.setHost(value);
+  options(value) {
+    return this.setOptions(value);
   }
 
   send() {}

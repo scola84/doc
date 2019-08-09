@@ -1,26 +1,32 @@
 import messagebird from 'messagebird';
 import { Transport } from './transport';
+const clients = {};
 
 export class Messagebird extends Transport {
-  createClient() {
-    this.setClient(
-      messagebird(
-        this._builder.mapHost(this._host)
-      )
-    );
+  open(callback) {
+    const host = this._options.host;
+
+    if (typeof clients[host] === 'undefined') {
+      clients[host] = messagebird(this._options.key);
+    }
+
+    callback(null, clients[host]);
   }
 
   send(message, callback) {
-    if (this._client === null) {
-      this.createClient();
-    }
+    this.open((error, client) => {
+      if (error) {
+        callback(error);
+        return;
+      }
 
-    this._client.messages.create({
-      originator: message.from,
-      recipients: [
-        message.to
-      ],
-      body: message.text
-    }, callback);
+      client.messages.create({
+        originator: message.from,
+        recipients: [
+          message.to
+        ],
+        body: message.text
+      }, callback);
+    });
   }
 }

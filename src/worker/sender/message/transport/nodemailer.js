@@ -1,20 +1,26 @@
 import nodemailer from 'nodemailer';
 import { Transport } from './transport';
+const clients = {};
 
 export class Nodemailer extends Transport {
-  createClient() {
-    this.setClient(
-      nodemailer.createTransport(
-        this._builder.mapHost(this._host)
-      )
-    );
+  open(callback) {
+    const host = this._options.host;
+
+    if (typeof clients[host] === 'undefined') {
+      clients[host] = nodemailer.createTransport(this._options);
+    }
+
+    callback(null, clients[host]);
   }
 
   send(message, callback) {
-    if (this._client === null) {
-      this.createClient();
-    }
+    this.open((error, client) => {
+      if (error) {
+        callback(error);
+        return;
+      }
 
-    this._client.sendMail(message, callback);
+      client.sendMail(message, callback);
+    });
   }
 }

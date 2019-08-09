@@ -1,13 +1,13 @@
 import { Builder } from '@scola/worker';
 import marked from 'marked';
 import sprintf from 'sprintf-js';
-import { map } from './message/';
+import * as map from './message/map';
 
 let hosts = {};
 
 export class MessageSender extends Builder {
   static setup() {
-    MessageSender.attachFactories(MessageSender, { map });
+    MessageSender.attachFactories(MessageSender, map);
   }
 
   static getHosts() {
@@ -21,8 +21,20 @@ export class MessageSender extends Builder {
   constructor(options = {}) {
     super(options);
 
+    this._host = null;
     this._transport = null;
+
+    this.setHost(options.host);
     this.setTransport(options.transport);
+  }
+
+  getHost() {
+    return this._host;
+  }
+
+  setHost(value = 'default') {
+    this._host = value;
+    return this;
   }
 
   getTransport() {
@@ -34,19 +46,36 @@ export class MessageSender extends Builder {
     return this;
   }
 
+  host(value) {
+    return this.setHost(value);
+  }
+
   transport(value) {
     return this.setTransport(value);
   }
 
-  mapHost(name) {
-    return hosts[name];
+  createTransport() {
+    const options = hosts[this._host] || {};
+
+    console.log(hosts, this._host);
+
+    if (typeof this[options.transport] === 'undefined') {
+      throw new Error('Transport not defined');
+    }
+
+    this._transport = this[options.transport]().options(options);
   }
 
   act(box, data, callback) {
-    data = this.filter(box, data);
-    data = this.sprintf(data);
+    if (this._transport === null) {
+      this.createTransport();
+    }
 
-    this._transport.send(data, (error, result) => {
+    const message = this.sprintf(
+      this.filter(box, data)
+    );
+
+    this._transport.send(message, (error, result) => {
       if (error) {
         this.handleError(box, data, callback, error);
         return;
