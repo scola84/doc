@@ -46,8 +46,10 @@ export class Order extends Snippet {
     return this;
   }
 
-  columns(value) {
-    return this.setColumns(value);
+  columns(...columns) {
+    return this.setColumns(
+      this._columns.concat(columns)
+    );
   }
 
   getDefault() {
@@ -103,7 +105,7 @@ export class Order extends Snippet {
       }
 
       string += string.length ? ', ' : '';
-      string += column;
+      string += this.resolveEscape(column, 'id');
       string += ' ';
       string += direction;
     }

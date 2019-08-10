@@ -37,8 +37,10 @@ export class Search extends Snippet {
     return this;
   }
 
-  columns(value) {
-    return this.setColumns(value);
+  columns(...columns) {
+    return this.setColumns(
+      this._columns.concat(columns)
+    );
   }
 
   getInner() {
@@ -117,8 +119,14 @@ export class Search extends Snippet {
 
       for (let j = 0; j < match.length; j += 1) {
         string += j === 0 ? '' : ` ${inner} `;
-        string += this.resolveValue(box, data, columns[i]);
+
+        string += this.resolveEscape(
+          this.resolveValue(box, data, columns[i]),
+          'id'
+        );
+
         string += ' LIKE ';
+
         string += this.resolveEscape(
           trim(match[j].replace(wildcard, '%')),
           'value'
