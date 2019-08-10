@@ -21,7 +21,6 @@ const custom = {
     object: Snippet,
     options: {
       escape: 'id',
-      infix: ' ',
       name: 'id'
     }
   },
@@ -36,7 +35,6 @@ const custom = {
     object: Snippet,
     options: {
       escape: 'value',
-      infix: ' ',
       name: 'value'
     }
   }
