@@ -134,6 +134,8 @@ export class SqlBuilder extends Builder {
       this.filter(box, data)
     );
 
+    this.log('info', box, data, query);
+
     if (this._stream) {
       this._dialect.stream(box, data, query, (error, result) => {
         this.process(box, data, query, error, result, callback);
