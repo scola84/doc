@@ -28,12 +28,16 @@ export class Postgresql extends Dialect {
         return;
       }
 
+      query = this.prepareInsert(query);
+
       connection.query(query, (error, result = {}) => {
         if (release) {
           connection.release();
         }
 
-        callback(error, result.rows);
+        result = this.resolveInsert(result.rows);
+
+        callback(error, result);
       });
     });
   }
@@ -58,6 +62,38 @@ export class Postgresql extends Dialect {
     }
 
     pools[host].connect(callback);
+  }
+
+  prepareInsert(query) {
+    const type = this._builder.getType();
+
+    if (type !== 'insert') {
+      return query;
+    }
+
+    const key = this._builder.getKey();
+
+    if (key === null) {
+      return query;
+    }
+
+    return query + ` RETURNING ${key}`;
+  }
+
+  resolveInsert(result) {
+    const type = this._builder.getType();
+
+    if (type !== 'insert') {
+      return result;
+    }
+
+    const key = this._builder.getKey();
+
+    if (key === null) {
+      return result;
+    }
+
+    return result.map((row) => row[key]);
   }
 
   stream(box, data, query, callback) {

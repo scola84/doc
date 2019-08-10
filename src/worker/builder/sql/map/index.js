@@ -24,6 +24,12 @@ const custom = {
       name: 'id'
     }
   },
+  list: {
+    object: Snippet,
+    options: {
+      parens: true
+    }
+  },
   query: {
     object: Snippet,
     options: {

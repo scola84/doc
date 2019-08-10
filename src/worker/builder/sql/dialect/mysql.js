@@ -29,6 +29,8 @@ export class Mysql extends Dialect {
           connection.release();
         }
 
+        result = this.resolveInsert(result);
+
         callback(error, result);
       });
     });
@@ -54,6 +56,22 @@ export class Mysql extends Dialect {
     }
 
     pools[host].getConnection(callback);
+  }
+
+  resolveInsert(result) {
+    const type = this._builder.getType();
+
+    if (type !== 'insert') {
+      return result;
+    }
+
+    const key = this._builder.getKey();
+
+    if (key === null) {
+      return result;
+    }
+
+    return [result.insertId];
   }
 
   stream(box, data, query, callback) {

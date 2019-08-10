@@ -167,7 +167,7 @@ export class SqlBuilder extends Builder {
     if (this._type === 'insert') {
       return {
         data: {
-          [this._key]: result.insertId
+          [this._key]: result
         }
       };
     }
