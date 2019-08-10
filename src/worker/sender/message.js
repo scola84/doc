@@ -28,6 +28,13 @@ export class MessageSender extends Builder {
     this.setTransport(options.transport);
   }
 
+  getOptions() {
+    return Object.assign(super.getOptions(), {
+      host: this._host,
+      transport: this._transport
+    });
+  }
+
   getHost() {
     return this._host;
   }
@@ -46,24 +53,16 @@ export class MessageSender extends Builder {
     return this;
   }
 
-  host(value) {
-    return this.setHost(value);
-  }
-
-  transport(value) {
-    return this.setTransport(value);
-  }
-
   createTransport() {
     const options = hosts[this._host] || {};
-
-    console.log(hosts, this._host);
 
     if (typeof this[options.transport] === 'undefined') {
       throw new Error('Transport not defined');
     }
 
-    this._transport = this[options.transport]().options(options);
+    this.setTransport(
+      this[options.transport]().options(options)
+    );
   }
 
   act(box, data, callback) {

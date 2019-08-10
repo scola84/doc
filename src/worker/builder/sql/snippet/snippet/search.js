@@ -18,6 +18,16 @@ export class Search extends Snippet {
     this.setWildcard(options.wildcard);
   }
 
+  getOptions() {
+    return Object.assign(super.getOptions(), {
+      columns: this._columns,
+      inner: this._inner,
+      outer: this._outer,
+      search: this._search,
+      wildcard: this._wildcard
+    });
+  }
+
   getColumns() {
     return this._columns;
   }
@@ -25,6 +35,10 @@ export class Search extends Snippet {
   setColumns(value = []) {
     this._columns = value;
     return this;
+  }
+
+  columns(value) {
+    return this.setColumns(value);
   }
 
   getInner() {
@@ -36,6 +50,10 @@ export class Search extends Snippet {
     return this;
   }
 
+  inner(value) {
+    return this.setInner(value);
+  }
+
   getOuter() {
     return this._outer;
   }
@@ -43,6 +61,10 @@ export class Search extends Snippet {
   setOuter(value = 'OR') {
     this._outer = value;
     return this;
+  }
+
+  outer(value) {
+    return this.setOuter(value);
   }
 
   setParens(value = true) {
@@ -58,6 +80,10 @@ export class Search extends Snippet {
     return this;
   }
 
+  search(value) {
+    return this.setSearch(value);
+  }
+
   getWildcard() {
     return this._wildcard;
   }
@@ -65,22 +91,6 @@ export class Search extends Snippet {
   setWildcard(value = /\*/g) {
     this._wildcard = value;
     return this;
-  }
-
-  columns(value) {
-    return this.setColumns(value);
-  }
-
-  inner(value) {
-    return this.setInner(value);
-  }
-
-  outer(value) {
-    return this.setOuter(value);
-  }
-
-  search(value) {
-    return this.setSearch(value);
   }
 
   wildcard(value) {

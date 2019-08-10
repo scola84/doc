@@ -16,6 +16,10 @@ export class Transport {
     return this;
   }
 
+  builder(value) {
+    return this.setBuilder(value);
+  }
+
   getOptions() {
     return this._options;
   }
@@ -23,10 +27,6 @@ export class Transport {
   setOptions(value = {}) {
     this._options = value;
     return this;
-  }
-
-  builder(value) {
-    return this.setBuilder(value);
   }
 
   options(value) {

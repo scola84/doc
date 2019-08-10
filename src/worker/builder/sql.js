@@ -112,30 +112,6 @@ export class SqlBuilder extends Builder {
     return this;
   }
 
-  connection(value) {
-    return this.setConnection(value);
-  }
-
-  dialect(value) {
-    return this.setDialect(value);
-  }
-
-  host(value) {
-    return this.setHost(value);
-  }
-
-  key(value) {
-    return this.setKey(value);
-  }
-
-  stream(value) {
-    return this.setStream(value);
-  }
-
-  type(value) {
-    return this.setType(value);
-  }
-
   createDialect() {
     const options = hosts[this._host];
 
@@ -143,7 +119,9 @@ export class SqlBuilder extends Builder {
       throw new Error('Dialect not defined');
     }
 
-    this._dialect = this[options.dialect]().options(options);
+    this.setDialect(
+      this[options.dialect]().options(options)
+    );
   }
 
   act(box, data, callback) {

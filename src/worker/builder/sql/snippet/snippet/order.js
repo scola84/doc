@@ -15,6 +15,15 @@ export class Order extends Snippet {
     this.setOrder(options.order);
   }
 
+  getOptions() {
+    return Object.assign(super.getOptions(), {
+      by: this._by,
+      columns: this._columns,
+      default: this._default,
+      order: this._order
+    });
+  }
+
   getBy() {
     return this._by;
   }
@@ -22,6 +31,10 @@ export class Order extends Snippet {
   setBy(value = null) {
     this._by = value;
     return this;
+  }
+
+  by(value) {
+    return this.setBy(value);
   }
 
   getColumns() {
@@ -33,6 +46,10 @@ export class Order extends Snippet {
     return this;
   }
 
+  columns(value) {
+    return this.setColumns(value);
+  }
+
   getDefault() {
     return this._default;
   }
@@ -42,6 +59,10 @@ export class Order extends Snippet {
     return this;
   }
 
+  default (value) {
+    return this.setDefault(value);
+  }
+
   getOrder() {
     return this._order;
   }
@@ -49,18 +70,6 @@ export class Order extends Snippet {
   setOrder(value = null) {
     this._order = value;
     return this;
-  }
-
-  by(value) {
-    return this.setBy(value);
-  }
-
-  columns(value) {
-    return this.setColumns(value);
-  }
-
-  default (value) {
-    return this.setDefault(value);
   }
 
   order(value) {

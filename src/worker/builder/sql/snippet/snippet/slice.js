@@ -13,6 +13,14 @@ export class Slice extends Snippet {
     this.setOffset(options.offset);
   }
 
+  getOptions() {
+    return Object.assign(super.getOptions(), {
+      count: this._count,
+      max: this._max,
+      offset: this._offset
+    });
+  }
+
   getCount() {
     return this._count;
   }
@@ -20,6 +28,10 @@ export class Slice extends Snippet {
   setCount(value = null) {
     this._count = value;
     return this;
+  }
+
+  count(value) {
+    return this.setCount(value);
   }
 
   getMax() {
@@ -31,6 +43,10 @@ export class Slice extends Snippet {
     return this;
   }
 
+  max(value) {
+    return this.setMax(value);
+  }
+
   getOffset() {
     return this._offset;
   }
@@ -38,14 +54,6 @@ export class Slice extends Snippet {
   setOffset(value = null) {
     this._offset = value;
     return this;
-  }
-
-  count(value) {
-    return this.setCount(value);
-  }
-
-  max(value) {
-    return this.setMax(value);
   }
 
   offset(value) {

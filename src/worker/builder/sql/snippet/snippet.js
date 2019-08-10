@@ -62,6 +62,10 @@ export class Snippet {
     return this;
   }
 
+  allow(value) {
+    return this.setAllow(value);
+  }
+
   getArg(index) {
     return this._args[index];
   }
@@ -69,6 +73,10 @@ export class Snippet {
   setArg(index, value) {
     this.args[index] = value;
     return this;
+  }
+
+  arg(index, value) {
+    return this.setArg(index, value);
   }
 
   getArgs() {
@@ -80,6 +88,10 @@ export class Snippet {
     return this;
   }
 
+  args(value) {
+    return this.setArgs(value);
+  }
+
   getBuilder() {
     return this._builder;
   }
@@ -87,6 +99,10 @@ export class Snippet {
   setBuilder(value = null) {
     this._builder = value;
     return this;
+  }
+
+  builder(value) {
+    return this.setBuilder(value);
   }
 
   getEscape() {
@@ -98,6 +114,10 @@ export class Snippet {
     return this;
   }
 
+  escape(value) {
+    return this.setEscape(value);
+  }
+
   getId() {
     return this._id;
   }
@@ -105,6 +125,10 @@ export class Snippet {
   setId(value = ++id) {
     this._id = value;
     return this;
+  }
+
+  id(value) {
+    return this.setId(value);
   }
 
   getInfix() {
@@ -116,6 +140,10 @@ export class Snippet {
     return this;
   }
 
+  infix(value) {
+    return this.setInfix(value);
+  }
+
   getName() {
     return this._name;
   }
@@ -123,6 +151,10 @@ export class Snippet {
   setName(value = null) {
     this._name = value;
     return this;
+  }
+
+  name(value) {
+    return this.setName(value);
   }
 
   getParens() {
@@ -134,6 +166,10 @@ export class Snippet {
     return this;
   }
 
+  parens() {
+    return this.setParens(true);
+  }
+
   getPostfix() {
     return this._postfix;
   }
@@ -141,6 +177,10 @@ export class Snippet {
   setPostfix(value = '') {
     this._postfix = value;
     return this;
+  }
+
+  postfix(value) {
+    return this.setPostfix(value);
   }
 
   getPrefix() {
@@ -152,24 +192,16 @@ export class Snippet {
     return this;
   }
 
-  allow(value) {
-    return this.setAllow(value);
-  }
-
-  escape() {
-    return this.setEscape('value');
-  }
-
-  escapeId() {
-    return this.setEscape('id');
-  }
-
-  parens() {
-    return this.setParens(true);
+  prefix(value) {
+    return this.setPrefix(value);
   }
 
   concat(left, right) {
-    const hasDouble = left[left.length - 1] === ' ' && right[0] === ' ';
+    const hasDouble = (
+      left[left.length - 1] === ' ' &&
+      right[0] === ' '
+    );
+
     return left + (hasDouble ? right.slice(1) : right);
   }
 
