@@ -410,5 +410,7 @@ export default [
   'NTILE',
   'PERCENT_RANK',
   'RANK',
-  'ROW_NUMBER'
+  'ROW_NUMBER',
+
+  'STRING_AGG'
 ];

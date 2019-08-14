@@ -46,7 +46,11 @@ export class Postgresql extends Dialect {
     const host = this._options.host;
 
     if (typeof pools[host] === 'undefined') {
-      pools[host] = new pg.Pool(this._options);
+      pools[host] = new pg.Pool(
+        this._options.dsn ? {
+          connectionString: this._options.dsn
+        } : this._options
+      );
     }
 
     const connection = this._builder.getConnection();

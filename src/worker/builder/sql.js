@@ -112,8 +112,18 @@ export class SqlBuilder extends Builder {
     return this;
   }
 
-  createDialect() {
-    const options = hosts[this._host];
+  createDialect(box, data) {
+    let host = this._host;
+
+    if (typeof host === 'function') {
+      host = host(box, data);
+    }
+
+    let options = hosts[host] || host;
+
+    if (typeof options === 'function') {
+      options = options(box, data);
+    }
 
     if (typeof this[options.dialect] === 'undefined') {
       throw new Error('Dialect not defined');
@@ -126,7 +136,7 @@ export class SqlBuilder extends Builder {
 
   act(box, data, callback) {
     if (this._dialect === null) {
-      this.createDialect();
+      this.createDialect(box, data);
     }
 
     const query = this._query.resolve(

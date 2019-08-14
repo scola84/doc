@@ -40,7 +40,11 @@ export class Mysql extends Dialect {
     const host = this._options.host;
 
     if (typeof pools[host] === 'undefined') {
-      pools[host] = mysql.createPool(this._options);
+      pools[host] = mysql.createPool(
+        this._options.dsn ?
+        this._options.dsn :
+        this._options
+      );
     }
 
     const connection = this._builder.getConnection();
