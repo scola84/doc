@@ -136,6 +136,8 @@ export class Search extends Snippet {
       string += ')';
     }
 
+    string = string ? string : 'true';
+
     return this.resolveParens(string, this._parens);
   }
 }
