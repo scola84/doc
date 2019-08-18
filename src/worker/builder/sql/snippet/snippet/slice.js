@@ -25,7 +25,7 @@ export class Slice extends Snippet {
     return this._count;
   }
 
-  setCount(value = null) {
+  setCount(value = 10) {
     this._count = value;
     return this;
   }
@@ -51,7 +51,7 @@ export class Slice extends Snippet {
     return this._offset;
   }
 
-  setOffset(value = null) {
+  setOffset(value = 0) {
     this._offset = value;
     return this;
   }
@@ -62,11 +62,11 @@ export class Slice extends Snippet {
 
   resolveInner(box, data) {
     const count = parseFloat(
-      this.resolveValue(box, data, this._count)
+      this.resolveValue(box, data, this._count) || 10
     );
 
     const offset = parseFloat(
-      this.resolveValue(box, data, this._offset)
+      this.resolveValue(box, data, this._offset) || 0
     );
 
     if (
