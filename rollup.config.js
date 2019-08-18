@@ -11,7 +11,9 @@ const external = [
   'messagebird',
   'mysql',
   'nodemailer',
-  'pg'
+  'path',
+  'pg',
+  'sqlstring'
 ];
 
 const globals = {
@@ -21,7 +23,9 @@ const globals = {
   'messagebird': 'messagebird',
   'mysql': 'mysql',
   'nodemailer': 'nodemailer',
-  'pg': 'pg'
+  'path': 'path',
+  'pg': 'pg',
+  'sqlstring': 'sqlstring'
 };
 
 const input = './index.js';
