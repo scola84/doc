@@ -53,18 +53,6 @@ export class MessageSender extends Builder {
     return this;
   }
 
-  createTransport() {
-    const options = hosts[this._host] || {};
-
-    if (typeof this[options.transport] === 'undefined') {
-      throw new Error('Transport not defined');
-    }
-
-    this.setTransport(
-      this[options.transport]().options(options)
-    );
-  }
-
   act(box, data, callback) {
     if (this._transport === null) {
       this.createTransport();
@@ -82,6 +70,18 @@ export class MessageSender extends Builder {
 
       this.handleSend(box, data, callback, result);
     });
+  }
+
+  createTransport() {
+    const options = hosts[this._host] || {};
+
+    if (typeof this[options.transport] === 'undefined') {
+      throw new Error('Transport not defined');
+    }
+
+    this.setTransport(
+      this[options.transport]().options(options)
+    );
   }
 
   handleError(box, data, callback, error) {
