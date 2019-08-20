@@ -12,6 +12,7 @@ const external = [
   'nodemailer',
   'path',
   'pg',
+  'pg-query-stream',
   'sqlstring'
 ];
 
@@ -23,6 +24,7 @@ const globals = {
   'nodemailer': 'nodemailer',
   'path': 'path',
   'pg': 'pg',
+  'pg-query-stream': 'pgQueryStream',
   'sqlstring': 'sqlstring'
 };
 

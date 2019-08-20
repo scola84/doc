@@ -125,12 +125,12 @@ export class SqlBuilder extends Builder {
     this.log('info', box, data, query);
 
     if (this._stream) {
-      this._dialect.stream(box, data, query, (error, result) => {
-        this.process(box, data, query, error, result, callback);
+      this._dialect.stream(box, data, query, (error, result, cb) => {
+        this.process(box, data, query, error, result, cb);
       });
     } else {
-      this._dialect.execute(box, data, query, (error, row, cb) => {
-        this.process(box, data, query, error, row, cb);
+      this._dialect.execute(box, data, query, (error, row) => {
+        this.process(box, data, query, error, row, callback);
       });
     }
   }

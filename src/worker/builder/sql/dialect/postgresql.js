@@ -1,4 +1,5 @@
 import pg from 'pg';
+import PgQueryStream from 'pg-query-stream';
 import sqlstring from 'sqlstring';
 import { Dialect } from './dialect';
 
@@ -101,6 +102,35 @@ export class Postgresql extends Dialect {
   }
 
   stream(box, data, query, callback) {
-    callback(new Error('Streaming not supported'));
+    this.open(box, data, (cerror, connection) => {
+      if (cerror) {
+        callback(cerror);
+        return;
+      }
+
+      query = new PgQueryStream(query);
+      const stream = connection.query(query);
+
+      stream.once('error', (error) => {
+        stream.removeAllListeners();
+        connection.release();
+        callback(error);
+      });
+
+      stream.on('data', (row) => {
+        callback(null, row, (bx, resume) => {
+          if (resume === false) {
+            query.pause();
+          } else {
+            query.resume();
+          }
+        });
+      });
+
+      stream.once('end', () => {
+        stream.removeAllListeners();
+        connection.release();
+      });
+    });
   }
 }

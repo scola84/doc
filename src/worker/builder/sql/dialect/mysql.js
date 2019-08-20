@@ -87,7 +87,7 @@ export class Mysql extends Dialect {
 
       const stream = connection.query(query);
 
-      stream.on('error', (error) => {
+      stream.once('error', (error) => {
         stream.removeAllListeners();
         connection.release();
         callback(error);
@@ -103,7 +103,7 @@ export class Mysql extends Dialect {
         });
       });
 
-      stream.on('end', () => {
+      stream.once('end', () => {
         stream.removeAllListeners();
         connection.release();
       });
