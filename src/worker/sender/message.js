@@ -1,6 +1,4 @@
-import { Builder } from '@scola/worker';
-import marked from 'marked';
-import sprintf from 'sprintf-js';
+import { Builder, vsprintf } from '@scola/worker';
 import * as map from './message/map';
 
 let hosts = {};
@@ -99,24 +97,16 @@ export class MessageSender extends Builder {
   }
 
   sprintf(data) {
-    data.subject = sprintf.sprintf(data.subject, data.data);
-    data.text = sprintf.sprintf(data.text, data.data);
+    data.subject = vsprintf(data.subject, [data.data]);
+    data.text = vsprintf(data.text, [data.data]);
 
     if (typeof data.html !== 'undefined') {
-      this.sprintfHtml(data);
+      data.html = vsprintf(
+        data.html.replace(/%([^s])/g, '%%$1'),
+        [vsprintf('%m', [data.text])]
+      );
     }
 
     return data;
-  }
-
-  sprintfHtml(data) {
-    const wrap = data.html.replace(/%([^s])/g, '%%$1');
-
-    const html = marked(data.text, {
-      breaks: true,
-      sanitize: true
-    });
-
-    data.html = sprintf.sprintf(wrap, html);
   }
 }

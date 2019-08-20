@@ -7,7 +7,6 @@ import resolve from 'rollup-plugin-node-resolve';
 const external = [
   '@scola/worker',
   'fs-extra',
-  'marked',
   'messagebird',
   'mysql',
   'nodemailer',
@@ -19,7 +18,6 @@ const external = [
 const globals = {
   '@scola/worker': 'scola.worker',
   'fs-extra': 'fsExtra',
-  'marked': 'marked',
   'messagebird': 'messagebird',
   'mysql': 'mysql',
   'nodemailer': 'nodemailer',
