@@ -10,7 +10,6 @@ const external = [
   'messagebird',
   'mysql',
   'nodemailer',
-  'path',
   'pg',
   'pg-query-stream',
   'sqlstring'
@@ -22,7 +21,6 @@ const globals = {
   'messagebird': 'messagebird',
   'mysql': 'mysql',
   'nodemailer': 'nodemailer',
-  'path': 'path',
   'pg': 'pg',
   'pg-query-stream': 'pgQueryStream',
   'sqlstring': 'sqlstring'
