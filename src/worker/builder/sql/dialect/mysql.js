@@ -29,9 +29,15 @@ export class Mysql extends Dialect {
           connection.release();
         }
 
-        result = this.resolveInsert(result);
+        if (error) {
+          callback(error);
+          return;
+        }
 
-        callback(error, result);
+        callback(
+          null,
+          this.resolveInsert(result)
+        );
       });
     });
   }

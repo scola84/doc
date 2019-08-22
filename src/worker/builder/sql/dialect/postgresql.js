@@ -36,9 +36,15 @@ export class Postgresql extends Dialect {
           connection.release();
         }
 
-        result = this.resolveInsert(result.rows);
+        if (error) {
+          callback(error);
+          return;
+        }
 
-        callback(error, result);
+        callback(
+          null,
+          this.resolveInsert(result.rows)
+        );
       });
     });
   }
@@ -85,7 +91,7 @@ export class Postgresql extends Dialect {
     return query + ` RETURNING ${key}`;
   }
 
-  resolveInsert(result) {
+  resolveInsert(result = []) {
     const type = this._builder.getType();
 
     if (type !== 'insert') {
