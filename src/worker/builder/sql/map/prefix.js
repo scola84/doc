@@ -41,5 +41,5 @@ export default [
   'RIGHT',
   'USING',
   'WINDOW',
-  'WHERE',
-];
+  'WHERE'
+]

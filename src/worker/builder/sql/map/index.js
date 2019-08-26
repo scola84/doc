@@ -1,12 +1,12 @@
-import camel from 'lodash-es/camelCase';
-import { Snippet } from '../snippet/snippet';
+import camel from 'lodash-es/camelCase'
+import { Snippet } from '../snippet/snippet'
 
-import dialectBase from './dialect';
-import funcBase from './func';
-import infixBase from './infix';
-import postfixBase from './postfix';
-import prefixBase from './prefix';
-import snippetBase from './snippet';
+import dialectBase from './dialect'
+import funcBase from './func'
+import infixBase from './infix'
+import postfixBase from './postfix'
+import prefixBase from './prefix'
+import snippetBase from './snippet'
 
 const custom = {
   from: {
@@ -44,7 +44,7 @@ const custom = {
       name: 'value'
     }
   }
-};
+}
 
 const dialect = Object.keys(dialectBase).reduce((master, group) => {
   return Object.keys(dialectBase[group]).reduce((object, name) => {
@@ -52,9 +52,9 @@ const dialect = Object.keys(dialectBase).reduce((master, group) => {
       [camel(name)]: {
         object: dialectBase[group][name]
       }
-    });
-  }, master);
-}, {});
+    })
+  }, master)
+}, {})
 
 const func = funcBase.reduce((object, name) => {
   return Object.assign(object, {
@@ -66,8 +66,8 @@ const func = funcBase.reduce((object, name) => {
         prefix: name
       }
     }
-  });
-}, {});
+  })
+}, {})
 
 const infix = infixBase.reduce((object, { name, token }) => {
   return Object.assign(object, {
@@ -78,8 +78,8 @@ const infix = infixBase.reduce((object, { name, token }) => {
         name
       }
     }
-  });
-}, {});
+  })
+}, {})
 
 const postfix = postfixBase.reduce((object, name) => {
   return Object.assign(object, {
@@ -90,8 +90,8 @@ const postfix = postfixBase.reduce((object, name) => {
         postfix: ` ${name}`
       }
     }
-  });
-}, {});
+  })
+}, {})
 
 const prefix = prefixBase.reduce((object, name) => {
   return Object.assign(object, {
@@ -102,8 +102,8 @@ const prefix = prefixBase.reduce((object, name) => {
         prefix: `${name} `
       }
     }
-  });
-}, {});
+  })
+}, {})
 
 const snippet = Object.keys(snippetBase).reduce((master, group) => {
   return Object.keys(snippetBase[group]).reduce((object, name) => {
@@ -111,9 +111,9 @@ const snippet = Object.keys(snippetBase).reduce((master, group) => {
       [camel(name)]: {
         object: snippetBase[group][name]
       }
-    });
-  }, master);
-}, {});
+    })
+  }, master)
+}, {})
 
 export {
   custom,
@@ -123,4 +123,4 @@ export {
   postfix,
   prefix,
   func
-};
+}

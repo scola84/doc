@@ -27,8 +27,8 @@ const alias = {
   '>>': 'bitRight',
   '^': 'bitXor',
   '|': 'bitOr',
-  '~': 'bitInv',
-};
+  '~': 'bitInv'
+}
 
 const list = [
   '!=',
@@ -66,11 +66,11 @@ const list = [
   'AS',
   'OVER',
   'UNION'
-];
+]
 
 export default list.map((token) => {
   return {
     name: alias[token] || token,
     token
-  };
-});
+  }
+})

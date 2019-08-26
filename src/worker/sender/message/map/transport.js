@@ -1,5 +1,5 @@
-import * as transport from '../transport';
+import * as transport from '../transport'
 
 export default {
   transport
-};
+}

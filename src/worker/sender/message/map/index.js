@@ -1,5 +1,5 @@
-import camel from 'lodash-es/camelCase';
-import transportBase from './transport';
+import camel from 'lodash-es/camelCase'
+import transportBase from './transport'
 
 const transport = Object.keys(transportBase).reduce((master, group) => {
   return Object.keys(transportBase[group]).reduce((object, name) => {
@@ -7,10 +7,10 @@ const transport = Object.keys(transportBase).reduce((master, group) => {
       [camel(name)]: {
         object: transportBase[group][name]
       }
-    });
-  }, master);
-}, {});
+    })
+  }, master)
+}, {})
 
 export {
   transport
-};
+}

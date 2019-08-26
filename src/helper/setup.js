@@ -1,16 +1,16 @@
 import {
   MessageSender,
   SqlBuilder
-} from '../worker';
+} from '../worker'
 
-export function setup() {
+export function setup () {
   console.out = (type, worker, box, data) => {
     if (type === 'fail' && !data.logged) {
-      data.logged = true;
-      console.error(data);
+      data.logged = true
+      console.error(data)
     }
-  };
+  }
 
-  MessageSender.setup();
-  SqlBuilder.setup();
+  MessageSender.setup()
+  SqlBuilder.setup()
 }

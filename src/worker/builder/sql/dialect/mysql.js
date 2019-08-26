@@ -1,118 +1,118 @@
-import mysql from 'mysql';
-import sqlstring from 'sqlstring';
-import { Dialect } from './dialect';
+import mysql from 'mysql'
+import sqlstring from 'sqlstring'
+import { Dialect } from './dialect'
 
-const pools = {};
+const pools = {}
 
 export class Mysql extends Dialect {
-  escape(value, type) {
+  escape (value, type) {
     if (type === 'value') {
-      return sqlstring.escape(value);
+      return sqlstring.escape(value)
     }
 
     if (type === 'id') {
-      return sqlstring.escapeId(value);
+      return sqlstring.escapeId(value)
     }
 
-    return value;
+    return value
   }
 
-  execute(box, data, query, callback) {
+  execute (box, data, query, callback) {
     this.open(box, data, (cerror, connection, release = true) => {
       if (cerror) {
-        callback(cerror);
-        return;
+        callback(cerror)
+        return
       }
 
       connection.query(query, (error, result) => {
         if (release) {
-          connection.release();
+          connection.release()
         }
 
         if (error) {
-          callback(error);
-          return;
+          callback(error)
+          return
         }
 
         callback(
           null,
           this.resolveInsert(result)
-        );
-      });
-    });
+        )
+      })
+    })
   }
 
-  open(box, data, callback) {
-    const host = this._options.host;
+  open (box, data, callback) {
+    const host = this._options.host
 
     if (typeof pools[host] === 'undefined') {
       pools[host] = mysql.createPool(
-        this._options.dsn ?
-        this._options.dsn :
-        this._options
-      );
+        this._options.dsn
+          ? this._options.dsn
+          : this._options
+      )
     }
 
-    const connection = this._builder.getConnection();
+    const connection = this._builder.getConnection()
 
     if (connection) {
-      connection(box, data, pools[host], callback);
-      return;
+      connection(box, data, pools[host], callback)
+      return
     }
 
     if (box.connection) {
-      callback(null, box.connection, false);
-      return;
+      callback(null, box.connection, false)
+      return
     }
 
-    pools[host].getConnection(callback);
+    pools[host].getConnection(callback)
   }
 
-  resolveInsert(result) {
-    const type = this._builder.getType();
+  resolveInsert (result) {
+    const type = this._builder.getType()
 
     if (type !== 'insert') {
-      return result;
+      return result
     }
 
-    const key = this._builder.getKey();
+    const key = this._builder.getKey()
 
     if (key === null) {
-      return result;
+      return result
     }
 
-    return [result.insertId];
+    return [result.insertId]
   }
 
-  stream(box, data, query, callback) {
+  stream (box, data, query, callback) {
     this.open(box, data, (cerror, connection) => {
       if (cerror) {
-        callback(cerror);
-        return;
+        callback(cerror)
+        return
       }
 
-      const stream = connection.query(query);
+      const stream = connection.query(query)
 
       stream.once('error', (error) => {
-        stream.removeAllListeners();
-        connection.release();
-        callback(error);
-      });
+        stream.removeAllListeners()
+        connection.release()
+        callback(error)
+      })
 
       stream.on('result', (row) => {
         callback(null, row, (bx, resume) => {
           if (resume === false) {
-            connection.pause();
+            connection.pause()
           } else {
-            connection.resume();
+            connection.resume()
           }
-        });
-      });
+        })
+      })
 
       stream.once('end', () => {
-        stream.removeAllListeners();
-        connection.release();
-      });
-    });
+        stream.removeAllListeners()
+        connection.release()
+      })
+    })
   }
 }

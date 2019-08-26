@@ -1,41 +1,41 @@
 export class Dialect {
-  constructor(options = {}) {
-    this._builder = null;
-    this._options = null;
+  constructor (options = {}) {
+    this._builder = null
+    this._options = null
 
-    this.setBuilder(options.builder);
-    this.setOptions(options.options);
+    this.setBuilder(options.builder)
+    this.setOptions(options.options)
   }
 
-  getBuilder() {
-    return this._builder;
+  getBuilder () {
+    return this._builder
   }
 
-  setBuilder(value = null) {
-    this._builder = value;
-    return this;
+  setBuilder (value = null) {
+    this._builder = value
+    return this
   }
 
-  builder(value) {
-    return this.setBuilder(value);
+  builder (value) {
+    return this.setBuilder(value)
   }
 
-  getOptions() {
-    return this._options;
+  getOptions () {
+    return this._options
   }
 
-  setOptions(value = {}) {
-    this._options = value;
-    return this;
+  setOptions (value = {}) {
+    this._options = value
+    return this
   }
 
-  options(value) {
-    return this.setOptions(value);
+  options (value) {
+    return this.setOptions(value)
   }
 
-  escape() {}
+  escape () {}
 
-  execute() {}
+  execute () {}
 
-  stream() {}
+  stream () {}
 }

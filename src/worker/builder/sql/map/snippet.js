@@ -1,5 +1,5 @@
-import * as snippet from '../snippet/snippet/';
+import * as snippet from '../snippet/snippet/'
 
 export default {
   snippet
-};
+}

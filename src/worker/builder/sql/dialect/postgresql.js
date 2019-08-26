@@ -1,142 +1,142 @@
-import pg from 'pg';
-import PgQueryStream from 'pg-query-stream';
-import sqlstring from 'sqlstring';
-import { Dialect } from './dialect';
+import pg from 'pg'
+import PgQueryStream from 'pg-query-stream'
+import sqlstring from 'sqlstring'
+import { Dialect } from './dialect'
 
 if (typeof pg !== 'undefined') {
-  pg.types.setTypeParser(1082, (value) => value);
+  pg.types.setTypeParser(1082, (value) => value)
 }
 
-const pools = {};
+const pools = {}
 
 export class Postgresql extends Dialect {
-  escape(value, type) {
+  escape (value, type) {
     if (type === 'value') {
-      return sqlstring.escape(value);
+      return sqlstring.escape(value)
     }
 
     if (type === 'id') {
-      return '"' + value.replace(/\./g, '"."') + '"';
+      return '"' + value.replace(/\./g, '"."') + '"'
     }
 
-    return value;
+    return value
   }
 
-  execute(box, data, query, callback) {
+  execute (box, data, query, callback) {
     this.open(box, data, (cerror, connection, release = true) => {
       if (cerror) {
-        callback(cerror);
-        return;
+        callback(cerror)
+        return
       }
 
-      query = this.prepareInsert(query);
+      query = this.prepareInsert(query)
 
       connection.query(query, (error, result = {}) => {
         if (release) {
-          connection.release();
+          connection.release()
         }
 
         if (error) {
-          callback(error);
-          return;
+          callback(error)
+          return
         }
 
         callback(
           null,
           this.resolveInsert(result.rows)
-        );
-      });
-    });
+        )
+      })
+    })
   }
 
-  open(box, data, callback) {
-    const host = this._options.host;
+  open (box, data, callback) {
+    const host = this._options.host
 
     if (typeof pools[host] === 'undefined') {
       pools[host] = new pg.Pool(
         this._options.dsn ? {
           connectionString: this._options.dsn
         } : this._options
-      );
+      )
     }
 
-    const connection = this._builder.getConnection();
+    const connection = this._builder.getConnection()
 
     if (connection) {
-      connection(box, data, pools[host], callback);
-      return;
+      connection(box, data, pools[host], callback)
+      return
     }
 
     if (box.connection) {
-      callback(null, box.connection, false);
-      return;
+      callback(null, box.connection, false)
+      return
     }
 
-    pools[host].connect(callback);
+    pools[host].connect(callback)
   }
 
-  prepareInsert(query) {
-    const type = this._builder.getType();
+  prepareInsert (query) {
+    const type = this._builder.getType()
 
     if (type !== 'insert') {
-      return query;
+      return query
     }
 
-    const key = this._builder.getKey();
+    const key = this._builder.getKey()
 
     if (key === null) {
-      return query;
+      return query
     }
 
-    return query + ` RETURNING ${key}`;
+    return query + ` RETURNING ${key}`
   }
 
-  resolveInsert(result = []) {
-    const type = this._builder.getType();
+  resolveInsert (result = []) {
+    const type = this._builder.getType()
 
     if (type !== 'insert') {
-      return result;
+      return result
     }
 
-    const key = this._builder.getKey();
+    const key = this._builder.getKey()
 
     if (key === null) {
-      return result;
+      return result
     }
 
-    return result.map((row) => row[key]);
+    return result.map((row) => row[key])
   }
 
-  stream(box, data, query, callback) {
+  stream (box, data, query, callback) {
     this.open(box, data, (cerror, connection) => {
       if (cerror) {
-        callback(cerror);
-        return;
+        callback(cerror)
+        return
       }
 
-      query = new PgQueryStream(query);
-      const stream = connection.query(query);
+      query = new PgQueryStream(query)
+      const stream = connection.query(query)
 
       stream.once('error', (error) => {
-        stream.removeAllListeners();
-        connection.release();
-        callback(error);
-      });
+        stream.removeAllListeners()
+        connection.release()
+        callback(error)
+      })
 
       stream.on('data', (row) => {
         callback(null, row, (bx, resume) => {
           if (resume === false) {
-            query.pause();
+            query.pause()
           } else {
-            query.resume();
+            query.resume()
           }
-        });
-      });
+        })
+      })
 
       stream.once('end', () => {
-        stream.removeAllListeners();
-        connection.release();
-      });
-    });
+        stream.removeAllListeners()
+        connection.release()
+      })
+    })
   }
 }

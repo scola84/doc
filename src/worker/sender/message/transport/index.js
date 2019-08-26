@@ -1,2 +1,2 @@
-export * from './messagebird';
-export * from './nodemailer';
+export * from './messagebird'
+export * from './nodemailer'

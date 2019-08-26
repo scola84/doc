@@ -20,4 +20,4 @@ export default [
   'SIGNED',
   'TIME',
   'UNSIGNED'
-];
+]

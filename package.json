@@ -8,12 +8,23 @@
   "main": "./dist/doc.cjs.js",
   "module": "./index.js",
   "devDependencies": {
-    "rollup": "^1.19.4",
-    "rollup-plugin-buble": "^0.19.8",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/runtime": "^7.5.5",
+    "glob-run": "^0.1.7",
+    "js-beautify": "^1.10.2",
+    "rollup": "^1.20.2",
+    "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.0.2",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-builtins": "^2.1.2",
-    "rollup-plugin-node-resolve": "^5.2.0"
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "standard": "^14.0.2"
+  },
+  "scripts": {
+    "build": "rollup -cm",
+    "format": "glob-run js-beautify -r 'src/**/*.{css,js}' && npx standard --fix"
   },
   "dependencies": {
     "lodash-es": "^4.17.15",

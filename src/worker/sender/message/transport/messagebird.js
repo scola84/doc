@@ -1,23 +1,23 @@
-import messagebird from 'messagebird';
-import { Transport } from './transport';
-const clients = {};
+import messagebird from 'messagebird'
+import { Transport } from './transport'
+const clients = {}
 
 export class Messagebird extends Transport {
-  open(callback) {
-    const host = this._options.host;
+  open (callback) {
+    const host = this._options.host
 
     if (typeof clients[host] === 'undefined') {
-      clients[host] = messagebird(this._options.key);
+      clients[host] = messagebird(this._options.key)
     }
 
-    callback(null, clients[host]);
+    callback(null, clients[host])
   }
 
-  send(message, callback) {
+  send (message, callback) {
     this.open((error, client) => {
       if (error) {
-        callback(error);
-        return;
+        callback(error)
+        return
       }
 
       client.messages.create({
@@ -26,7 +26,7 @@ export class Messagebird extends Transport {
           message.to
         ],
         body: message.text
-      }, callback);
-    });
+      }, callback)
+    })
   }
 }
