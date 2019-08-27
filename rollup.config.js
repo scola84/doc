@@ -1,12 +1,13 @@
-import babel from 'rollup-plugin-babel'
-import builtins from 'rollup-plugin-node-builtins'
-import commonjs from 'rollup-plugin-commonjs'
-import json from 'rollup-plugin-json'
-import resolve from 'rollup-plugin-node-resolve'
+import { rollup } from '@scola/worker'
+import { name, version } from './package.json'
+
+const {
+  banner,
+  plugins
+} = rollup
 
 const external = [
   '@scola/worker',
-  'fs-extra',
   'messagebird',
   'mysql',
   'nodemailer',
@@ -17,7 +18,6 @@ const external = [
 
 const globals = {
   '@scola/worker': 'scola.worker',
-  'fs-extra': 'fsExtra',
   messagebird: 'messagebird',
   mysql: 'mysql',
   nodemailer: 'nodemailer',
@@ -28,27 +28,11 @@ const globals = {
 
 const input = './index.js'
 
-const plugins = [
-  resolve(),
-  commonjs(),
-  builtins(),
-  json(),
-  babel({
-    plugins: [
-      ['@babel/plugin-transform-runtime', {
-        helpers: false
-      }]
-    ],
-    presets: [
-      ['@babel/preset-env']
-    ]
-  })
-]
-
 export default [{
   input,
   external,
   output: {
+    banner: banner(name, version),
     extend: true,
     file: 'dist/doc.umd.js',
     format: 'umd',
@@ -60,6 +44,7 @@ export default [{
   input,
   external,
   output: {
+    banner: banner(name, version),
     file: 'dist/doc.cjs.js',
     format: 'cjs',
     globals
