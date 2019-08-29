@@ -1,10 +1,12 @@
-import { rollup } from '@scola/worker'
-import { name, version } from './package.json'
-
-const {
+import {
   banner,
   plugins
-} = rollup
+} from '@scola/cli/rollup'
+
+import {
+  name,
+  version
+} from './package.json'
 
 const external = [
   '@scola/worker',

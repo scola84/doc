@@ -12,10 +12,11 @@
     "dist/"
   ],
   "scripts": {
-    "prepublishOnly": "npm run format && rm -rf dist/ && rollup -c",
-    "format": "glob-run js-beautify -r 'src/**/*.{css,js}' && npx standard --fix"
+    "format": "glob-run js-beautify -r 'src/**/*.{css,js}' && npx standard --fix",
+    "preversion": "npm run format && rm -rf dist/ && rollup -c"
   },
   "devDependencies": {
+    "@scola/cli": "^1.2.1",
     "glob-run": "^0.1.7",
     "js-beautify": "^1.10.2",
     "rollup": "^1.20.2",
