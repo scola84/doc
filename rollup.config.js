@@ -1,12 +1,12 @@
 import {
-  banner,
-  plugins
-} from '@scola/cli/rollup'
-
-import {
   name,
   version
 } from './package.json'
+
+const {
+  banner,
+  plugins
+} = require('@scola/worker/rollup')
 
 const external = [
   '@scola/worker',
