@@ -1,4 +1,4 @@
-# @scola/doc@1.0.11
+# License of this package
 
 MIT License
 
@@ -22,7 +22,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-# lodash-es@4.17.15 
+# Licenses of its dependencies
+
+## lodash-es@4.17.15 
 
 Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
 
