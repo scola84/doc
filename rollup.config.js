@@ -1,4 +1,4 @@
-const { plugins } = require('@scola/worker/rollup')
+const plugins = require('@scola/worker/rollup.plugins')
 
 const external = [
   '@scola/worker',
