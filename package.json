@@ -9,22 +9,28 @@
   "unpkg": "./dist/doc.umd.js",
   "version": "1.0.6",
   "files": [
-    "dist/"
+    "dist/",
+    "LICENSE",
+    "LICENSE-THIRDPARTY"
   ],
   "scripts": {
+    "build:dev": "npm run clean && rimraf node_modules/@scola && rollup -cmw",
+    "build:prod": "npm run clean && rollup -c",
+    "clean": "rimraf dist/ node_modules/ package-lock.json && npm install",
     "format": "glob-run js-beautify -r 'src/**/*.{css,js}' && npx standard --fix",
-    "preversion": "npm run format && rm -rf dist/ && rollup -c"
+    "preversion": "npm run format && npm run build:prod"
   },
   "devDependencies": {
     "glob-run": "^0.1.7",
     "js-beautify": "^1.10.2",
+    "rimraf": "^3.0.0",
     "rollup": "^1.20.3",
     "standard": "^14.1.0"
   },
   "dependencies": {
-    "@scola/worker": "^3.2.3",
+    "@scola/worker": "^3.3.1",
     "lodash-es": "^4.17.15",
-    "messagebird": "^2.4.1",
+    "messagebird": "^3.0.0",
     "mysql": "^2.17.1",
     "nodemailer": "^6.3.0",
     "pg": "^7.12.1",
