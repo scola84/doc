@@ -16,7 +16,7 @@
     "build:prod": "npm run clean && rollup -c",
     "clean": "rimraf dist/ node_modules/ package-lock.json && npm install",
     "format": "glob-run js-beautify -r 'src/**/*.{css,js}' && npx standard --fix",
-    "git:pkg": "git add LICENSE package-lock.json package.json",
+    "git:pkg": "git add CHANGELOG.md LICENSE.md package-lock.json package.json",
     "git:src": "git add src/",
     "preversion": "npm run format && npm run git:src",
     "version": "npm run build:prod && npm run git:pkg"
@@ -25,11 +25,11 @@
     "glob-run": "^0.1.7",
     "js-beautify": "^1.10.2",
     "rimraf": "^3.0.0",
-    "rollup": "^1.20.3",
+    "rollup": "^1.21.2",
     "standard": "^14.1.0"
   },
   "dependencies": {
-    "@scola/worker": "^3.4.3",
+    "@scola/worker": "^3.5.0",
     "lodash-es": "^4.17.15",
     "messagebird": "^3.0.0",
     "mysql": "^2.17.1",

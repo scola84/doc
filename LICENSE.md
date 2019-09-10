@@ -24,7 +24,7 @@ SOFTWARE.
 
 # Licenses of its dependencies
 
-## lodash-es@4.17.15 
+## lodash-es@4.17.15
 
 Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
 
