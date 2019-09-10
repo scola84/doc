@@ -1,3 +1,7 @@
+## 1.0.14 (Tue Sep 10 2019)
+
+* Update dependencies
+
 ## 1.0.13
 
 * Update scripts
